@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import useAuth from "../hooks/useAuth";
+import GoogleLogin from "../components/SocialLogin/GoogleLogin";
 
 const Login = () => {
   const { Login } = useAuth();
@@ -72,7 +73,9 @@ const Login = () => {
 
             {/* Register Link */}
             <div className="mt-4">
-              <p>
+            <div className="divider">Or Login with</div>
+              <GoogleLogin/>
+              <p className="text-center">
                 New user? <Link to="/register" className="text-blue-500">Register</Link>
               </p>
             </div>
