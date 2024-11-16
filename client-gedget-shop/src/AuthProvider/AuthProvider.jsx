@@ -20,23 +20,45 @@ const AuthProvider = ({ children }) => {
   const googleProvider = new GoogleAuthProvider(); // Google Auth provider
 
   // Function to create a new user
-  const CreateUser = (email, password) => {
-    return createUserWithEmailAndPassword(auth, email, password);
+  const CreateUser = async (email, password) => {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      return userCredential;
+    } catch (error) {
+      console.error("Error creating user: ", error);
+      throw error; // You can handle it in the component where this function is called
+    }
   };
 
   // Function to log in with email and password
-  const Login = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+  const Login = async (email, password) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      return userCredential;
+    } catch (error) {
+      console.error("Error logging in: ", error);
+      throw error; // You can handle it in the component where this function is called
+    }
   };
 
   // Function to log out
-  const Logout = () => {
-    return signOut(auth);
+  const Logout = async () => {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error("Error logging out: ", error);
+    }
   };
 
   // Function for Google login
-  const GoogleLogin = () => {
-    return signInWithPopup(auth, googleProvider);
+  const GoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      return result;
+    } catch (error) {
+      console.error("Error with Google login: ", error);
+      throw error;
+    }
   };
 
   // Monitor authentication state changes (user login, logout, etc.)
@@ -44,13 +66,12 @@ const AuthProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser); // Set the current user
       setLoading(false); // Stop loading once user is set
+      // Optionally remove the console.log for production:
       console.log(currentUser);
     });
 
     // Cleanup function to unsubscribe from the auth listener
-    return () => {
-      return unsubscribe;
-    };
+    return unsubscribe;
   }, []); // Empty dependency array to run only once on mount
 
   // Context value shared with children
