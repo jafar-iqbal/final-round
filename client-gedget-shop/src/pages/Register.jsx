@@ -74,11 +74,24 @@ const Register = () => {
                 <p className="text-red-500 text-sm text-light">{errors.confirmPassword.message}</p>
               )}
             </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Role</span>
+              </label>
+              <select className="select select-bordered w-full max-w-xs" {...register("role", {required:true})}> 
+                <option disabled selected>Select Your Role</option>
+                <option value="buyer">Buyer</option>
+                <option value="saller">Saller</option>
+              </select>
+              {
+                errors.role && (<p className="text-red-500 text-sm text-light">{errors.role.message}</p>)
+              }
+            </div>
             <div className="form-control mt-6">
               <button type="submit" className="btn btn-primary" >Register</button>
             </div>
             <div className="divider">Or Login with</div>
-            <GoogleLogin/>
+            <GoogleLogin />
             <div className="text-center">
               <h2>
                 Already Have an Account? <Link to="/login">Login</Link>

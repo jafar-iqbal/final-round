@@ -9,7 +9,7 @@ import {
   signInWithPopup,
   onAuthStateChanged,
 } from "firebase/auth";
-
+import axios from 'axios'
 export const AuthContext = createContext(null);
 
 const auth = getAuth(app);
@@ -65,6 +65,9 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser); // Set the current user
+      if(currentUser){
+        axios.post(`${import.meta.env.BASE_URL}`)
+      }
       setLoading(false); // Stop loading once user is set
       // Optionally remove the console.log for production:
       console.log(currentUser);

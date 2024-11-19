@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const jwt = require('jsonwebtoken')
 const app = express()
 require("dotenv").config();
 const port = process.env.PORT || 4000;
@@ -44,6 +45,12 @@ app.get("/", (req, res) => {
     res.send("Hello World!")
 })
 
+//jwt
+app.post('/authentication', (req, res)=>{
+  const userEmail=req.body 
+  const token = jwt.sign(userEmail, process.env.ACCESS_KEY_TOKEN,{expiresIn:'10d'})
+  res.send({token})
+})
 
 app.listen(port, () => {
     console.log(`server is running on port, ${port }`)
