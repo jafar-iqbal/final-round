@@ -9,7 +9,7 @@ import {
   signInWithPopup,
   onAuthStateChanged,
 } from "firebase/auth";
-import axios from 'axios'
+import axios from "axios";
 export const AuthContext = createContext(null);
 
 const auth = getAuth(app);
@@ -22,7 +22,11 @@ const AuthProvider = ({ children }) => {
   // Function to create a new user
   const CreateUser = async (email, password) => {
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       return userCredential;
     } catch (error) {
       console.error("Error creating user: ", error);
@@ -33,7 +37,11 @@ const AuthProvider = ({ children }) => {
   // Function to log in with email and password
   const Login = async (email, password) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       return userCredential;
     } catch (error) {
       console.error("Error logging in: ", error);
@@ -65,9 +73,19 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser); // Set the current user
-      if(currentUser){
-        axios.post(`${import.meta.env.BASE_URL}`)
+      if (currentUser) {
+        axios
+          .post(`http://localhost:4000/authentication`, {
+            email: currentUser.email,
+          })
+          .then((data) => {
+            if (data.data) {
+              localStorage.setItem("access-token", data?.data?.token);
+              setLoading(false);
+            }
+          });
       }
+      localStorage.removeItem("access-token");
       setLoading(false); // Stop loading once user is set
       // Optionally remove the console.log for production:
       console.log(currentUser);
